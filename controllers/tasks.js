@@ -4,7 +4,6 @@ const getAllTasks = async (req, res) => {
 		const tasks = await Task.find();
 		res.status(200).json(tasks);
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ msg: error });
 	}
 };

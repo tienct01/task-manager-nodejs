@@ -6,4 +6,10 @@ async function sendRequest(url, init) {
 		throw new Error(error.name);
 	}
 }
-export { sendRequest };
+const displayNotify = (div) => {
+	div.style.display = "block";
+	setTimeout(() => {
+		div.style.display = "none";
+	}, 2000);
+};
+export { sendRequest, displayNotify };

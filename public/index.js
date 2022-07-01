@@ -1,7 +1,6 @@
-import { sendRequest } from "./module.js";
+import { displayNotify, sendRequest } from "./module.js";
 
 const inputTask = document.querySelector("#input-task");
-const submitBtn = document.querySelector(".submit");
 const taskForm = document.querySelector("#task-form");
 const getTaskAlert = document.querySelector(".get-task-alert");
 const taskContainer = document.querySelector(".task-container");
@@ -65,7 +64,6 @@ async function createTask(event) {
 	event.preventDefault();
 
 	let inputStr = inputTask.value;
-
 	let { msg, task } = await sendRequest("/api/v1/tasks", {
 		method: "POST",
 		headers: {
@@ -74,18 +72,12 @@ async function createTask(event) {
 		body: JSON.stringify({ title: inputStr }),
 	});
 	if (task) {
-		successNotify.style.display = "block";
-		setTimeout(() => {
-			successNotify.style.display = "none";
-		}, 2000);
+		displayNotify(successNotify);
 		renderTask([task]);
 		inputTask.value = "";
 	} else {
-		failedNotify.innerHTML = `Failed, ${msg} !`;
-		failedNotify.style.display = "block";
-		setTimeout(() => {
-			failedNotify.style.display = "none";
-		}, 2000);
+		failedNotify.innerHTML = `Failed, ${msg}!`;
+		displayNotify(failedNotify);
 	}
 }
 

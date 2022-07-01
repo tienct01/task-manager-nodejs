@@ -1,4 +1,4 @@
-import { sendRequest } from "./module.js";
+import { displayNotify, sendRequest } from "./module.js";
 
 const idDiv = document.querySelector(".task-id .id");
 const form = document.querySelector("#edit-form");
@@ -13,15 +13,15 @@ getTaskAndRender();
 form.addEventListener("submit", updateTask);
 
 async function getTaskAndRender() {
-	const { task } = await sendRequest(`/api/v1/tasks/${id}`);
-	taskHolder = task;
+	const { task, msg } = await sendRequest(`/api/v1/tasks/${id}`);
 	console.log(task);
-	const { _id: taskId, title, isComplete } = task;
+	taskHolder = task;
 	if (!task) {
 		idDiv.innerHTML = "not found";
-		editInput.innerHTML = "not found";
+		editInput.value = "not found";
 		return;
 	}
+	const { _id: taskId, title, isComplete } = task;
 	idDiv.innerHTML = taskId;
 	editInput.value = title;
 	completeCbox.checked = isComplete;
@@ -42,19 +42,13 @@ async function updateTask(event) {
 		body: JSON.stringify({ title: newTitle, isComplete: isComplete }),
 	});
 	if (task) {
-		successNotify.style.display = "block";
-		setTimeout(() => {
-			successNotify.style.display = "none";
-		}, 2000);
+		displayNotify(successNotify);
 		taskHolder.title = newTitle;
 		taskHolder.isComplete = isComplete;
 		window.location.replace("index.html");
 	} else {
 		failedNotify.innerHTML = `Failed, ${msg} !`;
-		failedNotify.style.display = "block";
-		setTimeout(() => {
-			failedNotify.style.display = "none";
-		}, 2000);
+		displayNotify(failedNotify);
 		editInput.value = taskHolder.title;
 	}
 }
